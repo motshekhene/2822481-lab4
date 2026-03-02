@@ -4,10 +4,20 @@ document.getElementById('search-btn').addEventListener('click', () => {
 });
 
  const sSpinner=document.getElementById('loading-spinner');
+ const bCont=document.getElementById('bordering-countries');
+ const countries=document.getElementById('country-info');
  const eMessage=document.getElementById("error-message");
+
+
 
 async function searchCountry(countryName) {
     try {
+
+        bCont.innerHTML="";
+        countries.innerHTML="";
+        eMessage.innerText="";
+
+
         // Show loading spinner
        
        sSpinner.classList.remove("hidden");
@@ -33,23 +43,25 @@ async function searchCountry(countryName) {
         // Fetch bordering countries
 
         if (country.borders && country.borders.length > 0) {
-    let bordersHTML = '<p><strong>Bordering Countries:</strong></p>';
+    let bordersHTML = '<p><strong>Bordering Countries:</strong></p>';  //declared outside for loop because inner.html overides the border countries,and only leaves the last one
 
     for (let code of country.borders) {
         const response1 = await fetch(`https://restcountries.com/v3.1/alpha/${code}`);
         const data1 = await response1.json();
         const bCountry = data1[0];
 
-        bordersHTML = bordersHTML+`
+
+        //appending neighbouring countries
+        bordersHTML = bordersHTML+`                      
             <p>${bCountry.name.common}</p>
-            <img src="${bCountry.flags.svg}" alt="${bCountry.name.common} flag" width="50">
+            <img src="${bCountry.flags.svg}" alt="${bCountry.name.common} flag" width="30">
         `;
     }  
         
         // Update bordering countries section
          document.getElementById('bordering-countries').innerHTML = bordersHTML;
 } else {
-    document.getElementById('bordering-countries').innerHTML = '<p>No bordering countries.</p>';
+    document.getElementById('bordering-countries').innerHTML = '<p>This country does not have any neighbours.</p>';
 }
 
         
