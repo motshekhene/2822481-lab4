@@ -32,25 +32,25 @@ async function searchCountry(countryName) {
 
         // Fetch bordering countries
 
-        if (country.borders){
+        if (country.borders && country.borders.length > 0) {
+    let bordersHTML = '<p><strong>Bordering Countries:</strong></p>';
 
-            for(let code of country.borders){
-                const response1=await fetch(`https://restcountries.com/v3.1/alpha/${code}`);
-                const data1=await response1.json();
-                const bCountry = data1[0];   
-                
-                document.getElementById('bordering-countries').innerHTML=`
-           
-                <p><strong>Bordering Countries:</strong> ${bCountry.borders}</p>
-                <img src="${bCountry.flags.svg}" alt="${bCountry.name.common} flag">
-            `
-            
-            }
+    for (let code of country.borders) {
+        const response1 = await fetch(`https://restcountries.com/v3.1/alpha/${code}`);
+        const data1 = await response1.json();
+        const bCountry = data1[0];
 
-               
-        }
+        bordersHTML = bordersHTML+`
+            <p>${bCountry.name.common}</p>
+            <img src="${bCountry.flags.svg}" alt="${bCountry.name.common} flag" width="50">
+        `;
+    }  
         
         // Update bordering countries section
+         document.getElementById('bordering-countries').innerHTML = bordersHTML;
+} else {
+    document.getElementById('bordering-countries').innerHTML = '<p>No bordering countries.</p>';
+}
 
         
 
@@ -61,6 +61,8 @@ async function searchCountry(countryName) {
 
     } finally {
         // Hide loading spinner
+
+        sSpinner.classList.add("hidden");
 
     }
 
