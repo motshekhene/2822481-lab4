@@ -43,7 +43,7 @@ async function searchCountry(countryName) {
         // Fetch bordering countries
 
         if (country.borders && country.borders.length > 0) {
-    let bordersHTML = '<p><strong>Bordering Countries:</strong></p>';  //declared outside for loop because inner.html overides the border countries,and only leaves the last one
+    let bordersHTML = '<p><strong>Bordering Countries:</strong></p>';  //declared outside for loop because inner.html overides the border countries and only leaves the last one
 
     for (let code of country.borders) {
         const response1 = await fetch(`https://restcountries.com/v3.1/alpha/${code}`);
