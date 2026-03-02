@@ -3,11 +3,22 @@ document.getElementById('search-btn').addEventListener('click', () => {
     searchCountry(country);
 });
 
+ const sSpinner=document.getElementById('loading-spinner');
+ const eMessage=document.getElementById("error-message");
+
 async function searchCountry(countryName) {
     try {
         // Show loading spinner
+       
+       sSpinner.classList.remove("hidden");
 
         // Fetch country data
+
+      const response = await fetch(`https://restcountries.com/v3.1/name/${countryName}`);
+      const data = await response.json();
+      const country = data[0];
+
+
 
         // Update DOM
 
@@ -21,10 +32,32 @@ async function searchCountry(countryName) {
 
         // Fetch bordering countries
 
+        if (country.borders){
+
+            for(let code of country.borders){
+                const response1=await fetch(`https://restcountries.com/v3.1/alpha/${code}`);
+                const data1=await response1.json();
+                const bCountry = data1[0];   
+                
+                document.getElementById('bordering-countries').innerHTML=`
+           
+                <p><strong>Bordering Countries:</strong> ${bCountry.borders}</p>
+                <img src="${bCountry.flags.svg}" alt="${bCountry.name.common} flag">
+            `
+            
+            }
+
+               
+        }
+        
         // Update bordering countries section
+
+        
 
     } catch (error) {
         // Show error message
+        eMessage.textContent=error.message;
+      
 
     } finally {
         // Hide loading spinner
